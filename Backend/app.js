@@ -1,7 +1,6 @@
 import express from "express";
 import cors from "cors"
 import cookieParser from "cookie-parser"
-import aiRouter from "./src/routes/ai.routes.js"
 
 
 const app = express();
@@ -29,15 +28,18 @@ app.use(cors({
 app.use(express.json())                              
 app.use(express.urlencoded({ extended: true }))  
 app.use(cookieParser())
-app.use("/api/ai", aiRouter)
+
 
 
 import authrouter from "./src/routes/auth.routes.js"
+import adminRouter from "./src/routes/admin.routes.js"
 import sosRouter from "./src/routes/sos.routes.js"
+import aiRouter from "./src/routes/ai.routes.js"
 
-
+app.use("/api/ai", aiRouter)
 app.use("/api/v1/auth", authrouter)
-app.use("api/v1/sos", sosRouter)
+app.use("/api/v/admin", adminRouter)
+app.use("/api/v1/sos", sosRouter)
 
 
 
