@@ -127,7 +127,16 @@ const refresh = async (req, res) => {
 
         return res.status(200)
             .cookie("refreshToken", refreshToken, cookieOptions)
-            .json({ accessToken })
+            .json({ 
+                accessToken,
+                user: {
+                    _id: user._id,
+                    name: user.name,
+                    email: user.email,
+                    skills: user.skills,
+                    isAdmin: user.isAdmin
+                }
+            })
 
     } catch (error) {
         console.error("Refresh error:", error)
