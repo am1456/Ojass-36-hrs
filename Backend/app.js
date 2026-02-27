@@ -5,19 +5,17 @@ import cookieParser from "cookie-parser"
 
 const app = express();
 
-const allowedOrigins = [
-    "http://localhost:5173"
-];
+const allowedOrigins = process.env.CORS_ORIGIN
+    ? process.env.CORS_ORIGIN.split(",").map(o => o.trim())
+    : ["http://localhost:5173", "http://localhost:5174"]
 
 app.use(cors({
-    origin: function(origin, callback){
-        if(!origin) return callback(null, true);
-
-        if(allowedOrigins.indexOf(origin) !== -1){
-            callback(null, true);
-        }
-        else{
-            callback(new Error("Not allowed by CORS"));
+    origin: function (origin, callback) {
+        if (!origin) return callback(null, true)          // allow server-side/curl
+        if (allowedOrigins.includes(origin)) {
+            callback(null, true)
+        } else {
+            callback(new Error(`CORS: ${origin} not allowed`))
         }
     },
     credentials: true,
@@ -25,8 +23,8 @@ app.use(cors({
     allowedHeaders: ["Content-Type", "Authorization"]
 }))
 
-app.use(express.json())                              
-app.use(express.urlencoded({ extended: true }))  
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser())
 
 
@@ -43,4 +41,4 @@ app.use("/api/v1/sos", sosRouter)
 
 
 
-export {app};
+export { app };

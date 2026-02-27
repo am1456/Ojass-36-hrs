@@ -1,7 +1,10 @@
-import { GoogleGenerativeAI } from "@google/generative-ai"
+import OpenAI from "openai"
 import { SOS } from "../models/sos.model.js"
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY)
+const xai = new OpenAI({
+    apiKey: process.env.GROK_API_KEY,
+    baseURL: "https://api.x.ai/v1",
+})
 
 const getAIGuidance = async (req, res) => {
     try {
@@ -14,7 +17,7 @@ const getAIGuidance = async (req, res) => {
 
         // return cached guidance if already generated
         if (sos.aiGuidance) {
-            return res.status(200).json({ 
+            return res.status(200).json({
                 guidance: JSON.parse(sos.aiGuidance),
                 cached: true
             })
@@ -35,11 +38,14 @@ Give a response in this exact JSON format with no extra text, no markdown, no ba
 Be concise, clear, and practical. This is a real emergency.
         `
 
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" })
-        const result = await model.generateContent(prompt)
-        const rawText = result.response.text()
+        const completion = await xai.chat.completions.create({
+            model: "grok-3-mini",
+            messages: [{ role: "user", content: prompt }],
+        })
 
-        // clean response in case gemini adds backticks
+        const rawText = completion.choices[0].message.content
+
+        // clean response in case of extra backticks
         const cleaned = rawText.replace(/```json|```/g, "").trim()
         const guidance = JSON.parse(cleaned)
 
@@ -55,10 +61,10 @@ Be concise, clear, and practical. This is a real emergency.
         // fallback if AI fails
         const sos = await SOS.findById(req.params.sosId)
         const fallbackGuidance = getFallbackGuidance(sos?.crisisType || "Other")
-        
-        return res.status(200).json({ 
+
+        return res.status(200).json({
             guidance: fallbackGuidance,
-            fallback: true 
+            fallback: true
         })
     }
 }
