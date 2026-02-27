@@ -10,11 +10,21 @@
     "preview": "vite preview"
   },
   "dependencies": {
+<<<<<<< HEAD
     "@tailwindcss/vite": "^4.2.1",
     "axios": "^1.13.5",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-router-dom": "^7.13.1"
+=======
+    "axios": "^1.13.5",
+    "leaflet": "^1.9.4",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "react-leaflet": "^5.0.0",
+    "react-router-dom": "^7.13.1",
+    "socket.io-client": "^4.8.3"
+>>>>>>> 8595d75 (sos-map-ui)
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
