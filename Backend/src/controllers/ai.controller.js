@@ -1,9 +1,10 @@
 import OpenAI from "openai"
 import { SOS } from "../models/sos.model.js"
 
-const xai = new OpenAI({
-    apiKey: process.env.GROK_API_KEY,
-    baseURL: "https://api.x.ai/v1",
+// Client is created lazily so dotenv has time to load before this runs
+const getXAI = () => new OpenAI({
+    apiKey: process.env.GROQ_API_KEY,
+    baseURL: "https://api.groq.com/openai/v1",
 })
 
 const getAIGuidance = async (req, res) => {
@@ -38,8 +39,8 @@ Give a response in this exact JSON format with no extra text, no markdown, no ba
 Be concise, clear, and practical. This is a real emergency.
         `
 
-        const completion = await xai.chat.completions.create({
-            model: "grok-3-mini",
+        const completion = await getXAI().chat.completions.create({
+            model: "llama-3.3-70b-versatile",
             messages: [{ role: "user", content: prompt }],
         })
 
