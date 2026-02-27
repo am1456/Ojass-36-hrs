@@ -4,6 +4,19 @@ import { connectSocket, disconnectSocket } from '../../services/socket'
 
 // ── Thunks ───────────────────────────────────────────────────────────────────
 
+// Called on every app mount — tries to restore session from httpOnly cookie
+export const initAuth = createAsyncThunk(
+    'auth/init',
+    async (_, { rejectWithValue }) => {
+        try {
+            const { data } = await axiosInstance.post('/api/v1/auth/refresh')
+            return data
+        } catch {
+            return rejectWithValue(null) // not logged in — that's fine
+        }
+    }
+)
+
 export const registerUser = createAsyncThunk(
     'auth/register',
     async (formData, { rejectWithValue }) => {
@@ -47,31 +60,38 @@ const authSlice = createSlice({
         user: null,
         accessToken: null,
         loading: false,
+        initializing: true,  // true until initAuth resolves
         error: null,
     },
     reducers: {
-        // Called by axiosInstance interceptor after a silent refresh
         setCredentials: (state, action) => {
             state.accessToken = action.payload.accessToken
             state.user = action.payload.user
         },
-        // Called by axiosInstance interceptor when refresh itself fails
         logout: (state) => {
             state.user = null
             state.accessToken = null
             disconnectSocket()
         },
-        clearError: (state) => {
-            state.error = null
-        },
+        clearError: (state) => { state.error = null },
     },
     extraReducers: (builder) => {
+        // INIT (session restore)
+        builder
+            .addCase(initAuth.pending, (state) => { state.initializing = true })
+            .addCase(initAuth.fulfilled, (state, action) => {
+                state.initializing = false
+                if (action.payload) {
+                    state.user = action.payload.user
+                    state.accessToken = action.payload.accessToken
+                    connectSocket(action.payload.user._id)
+                }
+            })
+            .addCase(initAuth.rejected, (state) => { state.initializing = false })
+
         // REGISTER
         builder
-            .addCase(registerUser.pending, (state) => {
-                state.loading = true
-                state.error = null
-            })
+            .addCase(registerUser.pending, (state) => { state.loading = true; state.error = null })
             .addCase(registerUser.fulfilled, (state, action) => {
                 state.loading = false
                 state.user = action.payload.user
@@ -79,16 +99,12 @@ const authSlice = createSlice({
                 connectSocket(action.payload.user._id)
             })
             .addCase(registerUser.rejected, (state, action) => {
-                state.loading = false
-                state.error = action.payload
+                state.loading = false; state.error = action.payload
             })
 
         // LOGIN
         builder
-            .addCase(loginUser.pending, (state) => {
-                state.loading = true
-                state.error = null
-            })
+            .addCase(loginUser.pending, (state) => { state.loading = true; state.error = null })
             .addCase(loginUser.fulfilled, (state, action) => {
                 state.loading = false
                 state.user = action.payload.user
@@ -96,17 +112,15 @@ const authSlice = createSlice({
                 connectSocket(action.payload.user._id)
             })
             .addCase(loginUser.rejected, (state, action) => {
-                state.loading = false
-                state.error = action.payload
+                state.loading = false; state.error = action.payload
             })
 
         // LOGOUT
-        builder
-            .addCase(logoutUser.fulfilled, (state) => {
-                state.user = null
-                state.accessToken = null
-                disconnectSocket()
-            })
+        builder.addCase(logoutUser.fulfilled, (state) => {
+            state.user = null
+            state.accessToken = null
+            disconnectSocket()
+        })
     },
 })
 

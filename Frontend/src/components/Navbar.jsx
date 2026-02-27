@@ -1,6 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { logoutUser } from '../features/auth/authSlice'
+import { MapPin, Shield, LogOut, Star } from 'lucide-react'
 
 export default function Navbar() {
     const { user } = useSelector((s) => s.auth)
@@ -13,37 +14,38 @@ export default function Navbar() {
     }
 
     return (
-        <nav className="fixed top-0 left-0 right-0 z-50 bg-surface/90 backdrop-blur border-b border-white/5 h-14 flex items-center px-6 gap-4">
+        <nav className="fixed top-0 left-0 right-0 z-50 h-14 flex items-center px-5 gap-4"
+            style={{ background: 'rgba(8,14,26,0.92)', borderBottom: '1px solid rgba(255,255,255,0.06)', backdropFilter: 'blur(12px)' }}>
+
             {/* Logo */}
-            <Link to="/map" className="flex items-center gap-2 mr-auto">
-                <span className="text-accent text-xl font-bold tracking-tight">🆘</span>
-                <span className="text-white font-bold text-lg tracking-tight">NearHelp</span>
+            <Link to="/map" className="flex items-center gap-2.5 mr-auto group">
+                <div className="w-7 h-7 rounded-md bg-accent/15 border border-accent/30 flex items-center justify-center transition-colors group-hover:bg-accent/25">
+                    <MapPin size={14} className="text-accent" strokeWidth={2.5} />
+                </div>
+                <span className="font-bold text-slate-100 text-[15px] tracking-tight">NearHelp</span>
             </Link>
 
             {user && (
                 <>
-                    <Link
-                        to="/map"
-                        className="text-text/70 hover:text-white text-sm transition-colors duration-200"
-                    >
-                        Live Map
+                    <Link to="/map" className="btn-ghost hidden sm:flex items-center gap-1.5 text-xs">
+                        <MapPin size={13} /> Live Map
                     </Link>
+
                     {user.isAdmin && (
-                        <Link
-                            to="/admin"
-                            className="text-text/70 hover:text-accent text-sm transition-colors duration-200"
-                        >
-                            Admin
+                        <Link to="/admin" className="btn-ghost flex items-center gap-1.5 text-xs">
+                            <Shield size={13} /> Admin
                         </Link>
                     )}
-                    <span className="text-text/50 text-sm hidden md:block">
-                        {user.name} · <span className="text-yellow-400">⭐ {user.trustScore ?? 100}</span>
-                    </span>
-                    <button
-                        onClick={handleLogout}
-                        className="ml-2 px-4 py-1.5 bg-accent/20 text-accent border border-accent/40 rounded-lg text-sm hover:bg-accent/30 transition-all duration-200"
-                    >
-                        Logout
+
+                    <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/4 border border-white/6">
+                        <Star size={12} className="text-amber-400" fill="currentColor" />
+                        <span className="text-slate-300 text-xs font-medium">{user.trustScore ?? 100}</span>
+                        <span className="text-slate-600 text-xs">·</span>
+                        <span className="text-slate-400 text-xs">{user.name}</span>
+                    </div>
+
+                    <button onClick={handleLogout} className="btn-ghost flex items-center gap-1.5 text-xs text-rose-400 border-rose-500/20 hover:bg-rose-500/8 hover:text-rose-300">
+                        <LogOut size={13} /> Sign out
                     </button>
                 </>
             )}

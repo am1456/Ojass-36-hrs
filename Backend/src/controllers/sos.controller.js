@@ -228,11 +228,31 @@ const updateResponderStatus = async (req, res) => {
     }
 }
 
-export { 
-    triggerSOS, 
-    respondToSOS, 
-    resolveSOS, 
-    getActiveSOSList, 
+// UPDATE USER LOCATION (called when the map loads — keeps $nearSphere accurate)
+const updateLocation = async (req, res) => {
+    try {
+        const { lat, lng } = req.body
+        if (lat == null || lng == null) {
+            return res.status(400).json({ message: "lat and lng are required" })
+        }
+        await User.findByIdAndUpdate(req.user._id, {
+            location: {
+                type: "Point",
+                coordinates: [parseFloat(lng), parseFloat(lat)]
+            }
+        })
+        res.json({ message: "Location updated" })
+    } catch (err) {
+        res.status(500).json({ message: err.message })
+    }
+}
+
+export {
+    triggerSOS,
+    respondToSOS,
+    resolveSOS,
+    getActiveSOSList,
     getSOSById,
-    updateResponderStatus
+    updateResponderStatus,
+    updateLocation
 }
