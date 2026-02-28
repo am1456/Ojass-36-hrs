@@ -18,7 +18,25 @@ export const getSocket = () => {
 export const connectSocket = (userId) => {
     const s = getSocket()
     if (!s.connected) {
+        console.log(`[Socket] Connecting for user ${userId}...`)
+
+        s.on('connect', () => {
+            console.log(`[Socket] Connected with ID: ${s.id}`)
+            s.emit('join', userId)
+        })
+
+        s.on('disconnect', (reason) => {
+            console.log(`[Socket] Disconnected: ${reason}`)
+        })
+
+        s.on('connect_error', (err) => {
+            console.error(`[Socket] Connection error:`, err)
+        })
+
         s.connect()
+    } else {
+        // If already connected, just ensure they are in their personal room
+        console.log(`[Socket] Already connected with ID: ${s.id}. Emitting join for user ${userId}.`)
         s.emit('join', userId)
     }
     return s
