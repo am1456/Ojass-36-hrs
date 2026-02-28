@@ -9,7 +9,9 @@ const sosHandler = (io) => {
         })
 
         socket.on("chat:send", ({ sosId, from, message }) => {
-            io.to(sosId).emit("chat:message", { sosId, from, message })
+            // socket.to() → broadcast to everyone in room EXCEPT the sender
+            // (sender already added the message locally with self:true)
+            socket.to(sosId).emit("chat:message", { sosId, from, message })
         })
 
         socket.on("join:sos:room", (sosId) => {

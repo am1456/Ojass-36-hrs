@@ -11,7 +11,6 @@
   --color-muted: #475569;
 }
 
-/* ── Reset & Base ───────────────────────────────────────────────────────── */
 *,
 *::before,
 *::after {
@@ -34,7 +33,6 @@ body {
   font-size: 14px;
 }
 
-/* ── Shared Components (plain CSS — no @apply with custom tokens) ─────── */
 .input-field {
   width: 100%;
   background: #0f1829;
@@ -111,7 +109,6 @@ body {
   border-radius: 12px;
 }
 
-/* ── Badges ─────────────────────────────────────────────────────────────── */
 .badge,
 .badge-red,
 .badge-green,
@@ -157,7 +154,6 @@ body {
   border-color: rgba(251, 191, 36, 0.25);
 }
 
-/* ── Table ──────────────────────────────────────────────────────────────── */
 .tbl-head {
   font-size: 11px;
   font-weight: 500;
@@ -182,7 +178,6 @@ body {
   background: rgba(255, 255, 255, 0.015);
 }
 
-/* ── Scrollbar ──────────────────────────────────────────────────────────── */
 ::-webkit-scrollbar {
   width: 5px;
   height: 5px;
@@ -201,7 +196,6 @@ body {
   background: #253550;
 }
 
-/* ── SOS Pulsing Pin ────────────────────────────────────────────────────── */
 .sos-pin {
   position: relative;
   width: 44px;
@@ -250,7 +244,6 @@ body {
   animation: user-pulse 2s ease-in-out infinite;
 }
 
-/* ── Animations ─────────────────────────────────────────────────────────── */
 @keyframes sos-pulse {
   0% {
     transform: scale(1);
@@ -317,7 +310,6 @@ body {
   animation: spin 1s linear infinite;
 }
 
-/* ── Leaflet ────────────────────────────────────────────────────────────── */
 .leaflet-popup-content-wrapper {
   background: #19243a !important;
   border: 1px solid rgba(255, 255, 255, 0.08) !important;

@@ -2,7 +2,6 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import axiosInstance from '../../services/axiosInstance'
 import { connectSocket, disconnectSocket } from '../../services/socket'
 
-// ── Thunks ───────────────────────────────────────────────────────────────────
 
 // Called on every app mount — tries to restore session from httpOnly cookie
 export const initAuth = createAsyncThunk(
@@ -52,7 +51,6 @@ export const logoutUser = createAsyncThunk(
     }
 )
 
-// ── Slice ────────────────────────────────────────────────────────────────────
 
 const authSlice = createSlice({
     name: 'auth',

@@ -7,7 +7,6 @@ import { Mail, Lock, User, MapPin, AlertCircle, CheckSquare, Square, Bot, X, Arr
 
 const SKILLS = ['CPR', 'Doctor', 'Nurse', 'Firefighter', 'Mechanic', 'Other']
 
-// ── AI Welcome modal shown after registration ─────────────────────────────
 function AIWelcomeModal({ name, onClose }) {
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4"
@@ -141,7 +140,7 @@ export default function AuthPage() {
                                     required: 'Email is required',
                                     pattern: { value: /^\S+@\S+$/, message: 'Invalid email' },
                                 })}
-                                    type="email" placeholder="you@example.com" className="input-field pl-9" />
+                                    type="email" placeholder="  you@example.com" className="input-field pl-9" />
                             </div>
                             {errors.email && <p className="text-rose-400 text-xs">{errors.email.message}</p>}
                         </div>
@@ -189,7 +188,6 @@ export default function AuthPage() {
                 </div>
             </div>
 
-            {/* AI Welcome Modal — shown after registration */}
             {showAI && (
                 <AIWelcomeModal name={registeredName} onClose={() => { setShowAI(false); navigate('/map') }} />
             )}

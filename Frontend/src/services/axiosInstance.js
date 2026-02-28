@@ -2,8 +2,12 @@ import axios from 'axios'
 import { store } from '../app/store'
 import { setCredentials, logout } from '../features/auth/authSlice'
 
+// In dev: VITE_API_URL is empty → baseURL '/' → Vite proxy forwards to localhost:3000
+// In prod: VITE_API_URL = 'https://your-app.onrender.com' → direct calls to Render
+const BASE_URL = import.meta.env.VITE_API_URL || ''
+
 const axiosInstance = axios.create({
-    baseURL: '/',          // Vite proxy handles /api → http://localhost:3000
+    baseURL: BASE_URL,
     withCredentials: true,  // send the httpOnly refreshToken cookie
     headers: { 'Content-Type': 'application/json' },
 })
@@ -57,7 +61,7 @@ axiosInstance.interceptors.response.use(
 
             try {
                 const { data } = await axios.post(
-                    '/api/v1/auth/refresh',
+                    `${BASE_URL}/api/v1/auth/refresh`,
                     {},
                     { withCredentials: true }
                 )

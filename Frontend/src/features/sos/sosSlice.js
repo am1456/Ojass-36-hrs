@@ -1,7 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import axiosInstance from '../../services/axiosInstance'
 
-// ── Thunks ───────────────────────────────────────────────────────────────────
 
 export const getActiveSOSList = createAsyncThunk(
     'sos/getActive',
@@ -87,13 +86,12 @@ export const getAIGuidance = createAsyncThunk(
     }
 )
 
-// ── Slice ────────────────────────────────────────────────────────────────────
 
 const sosSlice = createSlice({
     name: 'sos',
     initialState: {
-        activeList: [],       // all active SOS pins on tmap
-        currentSOS: null,     // detail page SOS
+        activeList: [],      
+        currentSOS: null,     
         aiGuidance: null,
         loading: false,
         error: null,

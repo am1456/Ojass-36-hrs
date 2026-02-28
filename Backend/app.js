@@ -11,8 +11,11 @@ const allowedOrigins = process.env.CORS_ORIGIN
 
 app.use(cors({
     origin: function (origin, callback) {
-        if (!origin) return callback(null, true)          // allow server-side/curl
-        if (allowedOrigins.includes(origin)) {
+        if (!origin) return callback(null, true)
+        // Allow exact matches OR any *.vercel.app subdomain (for preview deployments too)
+        const allowed = allowedOrigins.includes(origin) ||
+            /\.vercel\.app$/.test(origin)
+        if (allowed) {
             callback(null, true)
         } else {
             callback(new Error(`CORS: ${origin} not allowed`))
@@ -36,9 +39,10 @@ import aiRouter from "./src/routes/ai.routes.js"
 
 app.use("/api/ai", aiRouter)
 app.use("/api/v1/auth", authrouter)
-app.use("/api/v/admin", adminRouter)
+app.use("/api/v1/admin", adminRouter)
 app.use("/api/v1/sos", sosRouter)
 
-
+// Health check — used by Render to verify the service is alive
+app.get("/health", (req, res) => res.json({ status: "ok", time: new Date() }))
 
 export { app };

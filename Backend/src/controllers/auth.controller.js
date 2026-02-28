@@ -4,7 +4,9 @@ import { generateTokens } from "../utilities/generateToken.js"
 const cookieOptions = {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
-    sameSite: "strict"
+    // In production (Vercel + Render = different domains) must be 'none' with secure:true
+    // In development (same localhost origin) use 'strict'
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "strict"
 }
 
 // REGISTER
@@ -127,7 +129,7 @@ const refresh = async (req, res) => {
 
         return res.status(200)
             .cookie("refreshToken", refreshToken, cookieOptions)
-            .json({ 
+            .json({
                 accessToken,
                 user: {
                     _id: user._id,
