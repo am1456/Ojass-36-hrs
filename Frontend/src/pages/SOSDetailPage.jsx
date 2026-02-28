@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import {
     getSOSById, respondToSOS, resolveSOS,
     addResponder, updateResponder, clearCurrentSOS, getAIGuidance,
+    getChatMessages,
 } from '../features/sos/sosSlice'
 import { getSocket } from '../services/socket'
 import {
@@ -40,6 +41,20 @@ export default function SOSDetailPage() {
         return () => dispatch(clearCurrentSOS())
     }, [sosId, dispatch])
 
+    // Load chat history from DB on mount
+    useEffect(() => {
+        dispatch(getChatMessages(sosId)).then((action) => {
+            if (action.payload?.length) {
+                setChatMsgs(
+                    action.payload.map((m) => ({
+                        ...m,
+                        self: m.from === user?.name,
+                    }))
+                )
+            }
+        })
+    }, [sosId, dispatch, user?.name])
+
     // Geolocation
     useEffect(() => {
         navigator.geolocation?.getCurrentPosition(
@@ -56,14 +71,18 @@ export default function SOSDetailPage() {
         s.on('responder:joined', (d) => { if (d.sosId === sosId) dispatch(addResponder(d)) })
         s.on('responder:statusUpdate', (d) => { if (d.sosId === sosId) dispatch(updateResponder(d)) })
         s.on('sos:resolved', (d) => { if (d.sosId === sosId) dispatch(getSOSById(sosId)) })
-        s.on('chat:message', (d) => { if (d.sosId === sosId) setChatMsgs((p) => [...p, d]) })
+        s.on('chat:message', (d) => {
+            if (d.sosId === sosId)
+                // Server broadcasts to ALL (including sender), so tag self here
+                setChatMsgs((p) => [...p, { ...d, self: d.from === user?.name }])
+        })
         return () => {
             s.off('responder:joined')
             s.off('responder:statusUpdate')
             s.off('sos:resolved')
             s.off('chat:message')
         }
-    }, [sosId, dispatch])
+    }, [sosId, dispatch, user?.name])
 
     const handleRespond = () => {
         if (!userLoc) return alert('Allow location access to respond')
@@ -85,8 +104,8 @@ export default function SOSDetailPage() {
         e.preventDefault()
         if (!chatInput.trim()) return
         const s = getSocket()
+        // Emit to server — server saves to DB and broadcasts back to ALL (including us)
         s?.emit('chat:send', { sosId, from: user.name, message: chatInput.trim() })
-        setChatMsgs((p) => [...p, { sosId, from: user.name, message: chatInput.trim(), self: true }])
         setChatInput('')
     }
 

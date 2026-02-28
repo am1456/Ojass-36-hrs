@@ -19,10 +19,10 @@ export default function Navbar() {
 
             {/* Logo */}
             <Link to="/map" className="flex items-center gap-2.5 mr-auto group">
-                <div className="w-7 h-7 rounded-md bg-accent/15 border border-accent/30 flex items-center justify-center transition-colors group-hover:bg-accent/25">
-                    <MapPin size={14} className="text-accent" strokeWidth={2.5} />
+                <div className="w-7 h-7 rounded-md overflow-hidden bg-transparent flex items-center justify-center transition-all group-hover:scale-105">
+                    <img src="/logo.png" alt="ResQNow Logo" className="w-full h-full object-cover" />
                 </div>
-                <span className="font-bold text-slate-100 text-[15px] tracking-tight">NearHelp</span>
+                <span className="font-bold text-slate-100 text-[15px] tracking-tight">ResQNow</span>
             </Link>
 
             {user && (

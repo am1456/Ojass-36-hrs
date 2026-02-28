@@ -228,6 +228,18 @@ const updateResponderStatus = async (req, res) => {
     }
 }
 
+// GET CHAT MESSAGES for an SOS room
+const getChatMessages = async (req, res) => {
+    try {
+        const sos = await SOS.findById(req.params.sosId).select("messages")
+        if (!sos) return res.status(404).json({ message: "SOS not found" })
+        return res.status(200).json({ messages: sos.messages })
+    } catch (error) {
+        console.error("Get chat messages error:", error)
+        return res.status(500).json({ message: "Internal server error" })
+    }
+}
+
 // UPDATE USER LOCATION (called when the map loads — keeps $nearSphere accurate)
 const updateLocation = async (req, res) => {
     try {
@@ -254,5 +266,6 @@ export {
     getActiveSOSList,
     getSOSById,
     updateResponderStatus,
-    updateLocation
+    updateLocation,
+    getChatMessages
 }

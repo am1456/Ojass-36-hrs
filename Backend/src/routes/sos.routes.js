@@ -6,7 +6,8 @@ import {
     getActiveSOSList,
     getSOSById,
     updateResponderStatus,
-    updateLocation
+    updateLocation,
+    getChatMessages
 } from "../controllers/sos.controller.js"
 import { verifyJWT } from "../middlewares/auth.middleware.js"
 
@@ -16,6 +17,7 @@ const sosRouter = Router()
 sosRouter.use(verifyJWT)
 
 sosRouter.get("/active", getActiveSOSList)
+sosRouter.get("/:sosId/messages", getChatMessages)   // ← chat history
 sosRouter.get("/:sosId", getSOSById)
 sosRouter.post("/trigger", triggerSOS)
 sosRouter.post("/respond/:sosId", respondToSOS)

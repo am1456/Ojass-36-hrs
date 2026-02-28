@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-echo "Starting NearHelp Frontend..."
+echo "Starting ResQNow Frontend..."
 
 cd Frontend
 npm run dev

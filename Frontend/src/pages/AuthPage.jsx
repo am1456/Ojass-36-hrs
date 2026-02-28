@@ -24,7 +24,7 @@ function AIWelcomeModal({ name, onClose }) {
                 <div>
                     <h2 className="font-bold text-slate-100 text-lg">Welcome, {name}!</h2>
                     <p className="text-slate-500 text-sm mt-1 leading-relaxed">
-                        NearHelp uses an AI assistant powered by Gemini. During an active SOS you can request instant crisis guidance — step-by-step first aid, safety instructions, and coordination tips.
+                        ResQNow uses an AI assistant powered by Gemini. During an active SOS you can request instant crisis guidance — step-by-step first aid, safety instructions, and coordination tips.
                     </p>
                 </div>
 
@@ -94,10 +94,10 @@ export default function AuthPage() {
             <div className="relative w-full max-w-[400px]">
                 {/* Brand */}
                 <div className="text-center mb-8">
-                    <div className="inline-flex items-center justify-center w-12 h-12 bg-accent/10 border border-accent/20 rounded-xl mb-4">
-                        <MapPin size={22} className="text-accent" strokeWidth={2.5} />
+                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl mb-4 overflow-hidden shadow-lg border border-slate-700/50">
+                        <img src="/logo.png" alt="ResQNow Logo" className="w-full h-full object-cover" />
                     </div>
-                    <h1 className="text-2xl font-bold text-slate-100 tracking-tight">NearHelp</h1>
+                    <h1 className="text-2xl font-bold text-slate-100 tracking-tight">ResQNow</h1>
                     <p className="text-slate-500 text-sm mt-1">Community crisis response</p>
                 </div>
 
@@ -169,8 +169,8 @@ export default function AuthPage() {
                                         return (
                                             <button type="button" key={skill} onClick={() => toggleSkill(skill)}
                                                 className={`flex items-center gap-1.5 px-2.5 py-2 rounded-lg border text-xs font-medium transition-all duration-150 ${checked
-                                                        ? 'bg-accent/10 border-accent/35 text-rose-300'
-                                                        : 'bg-secondary border-white/7 text-slate-500 hover:border-white/14 hover:text-slate-400'
+                                                    ? 'bg-accent/10 border-accent/35 text-rose-300'
+                                                    : 'bg-secondary border-white/7 text-slate-500 hover:border-white/14 hover:text-slate-400'
                                                     }`}>
                                                 {checked ? <CheckSquare size={11} className="text-accent" /> : <Square size={11} />}
                                                 {skill}

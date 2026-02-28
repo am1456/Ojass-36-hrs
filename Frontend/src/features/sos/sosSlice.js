@@ -86,12 +86,23 @@ export const getAIGuidance = createAsyncThunk(
     }
 )
 
+export const getChatMessages = createAsyncThunk(
+    'sos/getChatMessages',
+    async (sosId, { rejectWithValue }) => {
+        try {
+            const { data } = await axiosInstance.get(`/api/v1/sos/${sosId}/messages`)
+            return data.messages   // array of { from, message, sentAt, _id }
+        } catch (err) {
+            return rejectWithValue(err.response?.data?.message || 'Failed to fetch messages')
+        }
+    }
+)
 
 const sosSlice = createSlice({
     name: 'sos',
     initialState: {
-        activeList: [],      
-        currentSOS: null,     
+        activeList: [],
+        currentSOS: null,
         aiGuidance: null,
         loading: false,
         error: null,

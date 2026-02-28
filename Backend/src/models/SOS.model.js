@@ -39,7 +39,12 @@ const sosSchema = new mongoose.Schema({
     aiGuidance: {
         type: String,
         default: ""
-    }
+    },
+    messages: [{
+        from: { type: String, required: true },
+        message: { type: String, required: true },
+        sentAt: { type: Date, default: Date.now }
+    }]
 }, { timestamps: true })
 
 sosSchema.index({ location: "2dsphere" })
