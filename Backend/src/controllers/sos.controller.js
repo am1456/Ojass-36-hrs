@@ -1,4 +1,4 @@
-import { SOS } from "../models/sos.model.js"
+import { SOS } from "../models/SOS.model.js"
 import { User } from "../models/User.model.js"
 import { findNearbyUsers } from "../utilities/geoQuery.js"
 

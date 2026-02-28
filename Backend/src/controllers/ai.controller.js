@@ -1,5 +1,5 @@
 import OpenAI from "openai"
-import { SOS } from "../models/sos.model.js"
+import { SOS } from "../models/SOS.model.js"
 
 // Client is created lazily so dotenv has time to load before this runs
 const getXAI = () => new OpenAI({
