@@ -1,14 +1,19 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import axiosInstance from '../../services/axiosInstance'
+import axios from 'axios'
 import { connectSocket, disconnectSocket } from '../../services/socket'
 
 
 // Called on every app mount — tries to restore session from httpOnly cookie
+// We use plain axios here because if we use axiosInstance, a 401 (expired/missing cookie)
+// will trigger the global interceptor which dispatches `logout()` and wipes localStorage!
 export const initAuth = createAsyncThunk(
     'auth/init',
     async (_, { rejectWithValue }) => {
         try {
-            const { data } = await axiosInstance.post('/api/v1/auth/refresh')
+            // Note: BASE_URL is needed if it's production, but in dev Vite proxies /api
+            const BASE_URL = import.meta.env.VITE_API_URL || ''
+            const { data } = await axios.post(`${BASE_URL}/api/v1/auth/refresh`, {}, { withCredentials: true })
             return data
         } catch {
             return rejectWithValue(null) // not logged in — that's fine

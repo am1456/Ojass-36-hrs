@@ -2,6 +2,7 @@ import { configureStore } from '@reduxjs/toolkit'
 import authReducer from '../features/auth/authSlice'
 import sosReducer from '../features/sos/sosSlice'
 import adminReducer from '../features/admin/adminSlice'
+import { connectSocket } from '../services/socket'
 
 // ── LocalStorage persistence helpers ─────────────────────────────────────────
 const LS_KEY = 'resqnow_auth'
@@ -39,9 +40,14 @@ export const store = configureStore({
     },
     // Seed the initial auth state from localStorage
     preloadedState: persistedAuth
-        ? { auth: { user: persistedAuth.user, accessToken: persistedAuth.accessToken, loading: false, initializing: true, error: null } }
+        ? { auth: { user: persistedAuth.user, accessToken: persistedAuth.accessToken, loading: false, initializing: false, error: null } }
         : undefined,
 })
+
+// If we woke up with a persisted user, connect the socket immediately
+if (persistedAuth?.user?._id) {
+    connectSocket(persistedAuth.user._id)
+}
 
 // Subscribe to save auth state on every change
 store.subscribe(() => {
